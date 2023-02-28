@@ -1,0 +1,16 @@
+.btn {
+    background-color: rgb(50, 160, 50);
+    border: none;
+    color: white;
+    padding: 10px 20px;
+    font-size: 16px;
+    font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.5s ease;
+}
+.btn:hover { background-color: rgb(50, 200, 50); }
+
+#clear-button { margin: 3px 0 0 3px; float: left; }
+
+#update-button { margin: 3px 3px 0px; float: right; }
