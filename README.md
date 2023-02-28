@@ -1,4 +1,12 @@
-# pole-zero-response-plotter-js
+# Pole Zero Response Plotter using HTML, CSS, JavaScript and ChartJS
+You can run the HTML (index.html) directly to reach the app by using one of following browsers:
+- Chrome
+- Edge
+- Firefox
+- Safari
+
+Special thanks to https://github.com/chrispahm/chartjs-plugin-dragdata.
+#
 <p align="center">s-plane Magnitude Response</p>
 <p align="center"><img src="https://user-images.githubusercontent.com/77770587/221772345-74053a90-2ba8-42ec-96e4-9ea2e14fd4ef.png" width="900"></p>
 <p align="center">s-plane Phase Response</p>
