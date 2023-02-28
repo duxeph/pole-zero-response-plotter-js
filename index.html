@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    
+	<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-dragdata@2.2.3/dist/chartjs-plugin-dragdata.min.js"></script>
+    <link rel="stylesheet" href="./button.css">
+    <link rel="stylesheet" href="./checkbox.css">
+    <link rel="stylesheet" href="./combobax.css">
+    <link rel="stylesheet" href="./style.css">
+    <script src="./main.js" async></script>
+</head>
+<body>
+    <div id="container">
+        <div id="plot">
+            <canvas id="plotChart"></canvas>
+        </div>
+        <div id="result">
+            <canvas id="resultChart"></canvas>
+        </div>
+
+        <div id="clear-op">
+            <button id="clear-button" class="btn">Clear all</button>
+            <label class="checkbox">Delete by click
+                <input id="deleting-clicks" type="checkbox">
+                <span class="checkmark"></span>
+            </label>
+        </div>
+
+        <div id="plane-response-type">
+            <button id="update-button" class="btn">Update</button>
+            <div id="response-box" class="combobox">
+                <select id="response-select">
+                    <option value="magnitude">Magnitude Response</option>
+                    <option value="phase">Phase Response</option>
+                </select>
+            </div>
+            <div id="plane-box" class="combobox">
+                <select id="plane-select">
+                    <option value="s-plane">s-plane</option>
+                    <option value="z-plane">z-plane</option>
+                </select>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
