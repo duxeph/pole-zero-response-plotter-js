@@ -18,7 +18,17 @@ Special thanks to https://github.com/chrispahm/chartjs-plugin-dragdata
 - Indexings of response chart are corrected (still limited with 15 for laplace(s) plane, 3.14(pi) for discrete laplace(z) plane).
 
 # Illustration
-To obtain ![](https://latex.codecogs.com/svg.latex?y=\frac{(s^2+4)(s+2)}{(s^2+4s+8)(s^2+2s+17)})'s response graph, you must put the poles and the zeros as following:
+To obtain ![](https://latex.codecogs.com/svg.latex?y=\frac{(s^2+4)(s-2)}{(s^2+4s+8)(s^2+2s+17)})'s response graph, split s^2(s) into s(s) as ![](https://latex.codecogs.com/svg.latex?y=\frac{(s+2j)(s-2j)(s-2)}{(s+2+2j)(s+2-2j)(s+1+4j)(s+1-4j)}), and find the poles and the zeros as following:
+
+![](https://latex.codecogs.com/svg.latex?{s-2}\rightarrow{s_\mathrm{zero}=2})
+
+![](https://latex.codecogs.com/svg.latex?{s\pm2j}\rightarrow{s_\mathrm{zero}=\pm2j})
+
+![](https://latex.codecogs.com/svg.latex?{s+2\pm2j}\rightarrow{s_\mathrm{pole}=-2\pm2j})
+
+![](https://latex.codecogs.com/svg.latex?{s+1\pm4j}\rightarrow{s_\mathrm{pole}=-1\pm4j})
+
+At the end, you must put the poles and the zeros as following:
 <p align="center"><img src="https://user-images.githubusercontent.com/77770587/222679656-1e778e08-c335-43b5-ad7a-bc5690ee24f1.png" width="750"></p>
 <p align="center"><img src="https://user-images.githubusercontent.com/77770587/222679605-85b4ce5e-df7c-4a48-93ac-6e35befb3530.png" width="750"></p>
 
