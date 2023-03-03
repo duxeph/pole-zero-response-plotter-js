@@ -150,7 +150,7 @@ function phase_response_z(chart, bilateral) {
         }); pass = false;
         chart.data.datasets[1].data.forEach((pole) => {
             if(pass) { pass = false; } else {
-                if(Math.abs(zero.y)<zero_thr) {
+                if(Math.abs(pole.y)<zero_thr) {
                     a -= Math.atan((pole.x-x)/(-y));
                     pass = true;
                 } else {
