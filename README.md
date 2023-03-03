@@ -7,13 +7,13 @@ You can run the HTML (index.html) directly to reach the app by using one of foll
 
 Special thanks to https://github.com/chrispahm/chartjs-plugin-dragdata
 # Last updates
-Some additions:
+**Some additions:**
 - Unilateral chart option is added and default is updated to unilateral (convertion between unilateral and bilateral is only available in the source/code part).
 
-Note: Since main purpose is to create a filter for real world applications, each point has a conjugate at the opposite part of the chart according to x axis; resultantly, positive and negative x axes are symmetric to each other in the response chart. By updating default to unilateral, I aimed to remove the negative part of the symmetric response chart since it is nonsense to keep it.
+**Note:** Since main purpose is to create a filter for real world applications, each point has a conjugate at the opposite part of the chart according to x axis; resultantly, positive and negative x axes are symmetric to each other in the response chart. By updating default to unilateral, I aimed to remove the negative part of the symmetric response chart since it is nonsense to keep it.
 - Points created/moved that are too close to x axis (with a threshold of 0.25 by default) counts to be as one point WITH y=0 VALUE (only in calculation part, user still sees them as two points).
 
-Bug fix:
+**Bug fix:**
 - Case of points to be separated from their conjugates when mouse slides from +y to -y or -y to +y without releasing the point is fixed.
 - Indexings of response chart are corrected (still limited with 15 for laplace(s) plane, 3.14(pi) for discrete laplace(z) plane).
 
