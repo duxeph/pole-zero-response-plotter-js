@@ -16,7 +16,13 @@ Note: Since main purpose is to create a filter for real world applications, each
 Bug fix:
 - Case of points to be separated from their conjugates when mouse slides from +y to -y or -y to +y without releasing the point is fixed.
 - Indexings of response chart are corrected (still limited with 15 for laplace(s) plane, 3.14(pi) for discrete laplace(z) plane).
-#
+
+# Illustration
+To obtain ![](https://latex.codecogs.com/svg.latex?y=\frac{(s^2+4)(s+2)}{(s^2+4s+8)(s^2+2s+17)})'s response graph, you must put the poles and the zeros as following:
+<p align="center"><img src="https://user-images.githubusercontent.com/77770587/222679656-1e778e08-c335-43b5-ad7a-bc5690ee24f1.png" width="750"></p>
+<p align="center"><img src="https://user-images.githubusercontent.com/77770587/222679605-85b4ce5e-df7c-4a48-93ac-6e35befb3530.png" width="750"></p>
+
+# General View & Options
 <p align="center">s-plane Magnitude Response</p>
 <p align="center"><img src="https://user-images.githubusercontent.com/77770587/222671101-0f0c98a5-7f76-4c83-a0f3-29f4e5fb0365.png" width="900"></p>
 <p align="center">s-plane Phase Response</p>
