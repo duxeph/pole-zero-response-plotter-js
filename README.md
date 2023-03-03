@@ -5,13 +5,23 @@ You can run the HTML (index.html) directly to reach the app by using one of foll
 - Firefox
 - Safari
 
-Special thanks to https://github.com/chrispahm/chartjs-plugin-dragdata.
+Special thanks to https://github.com/chrispahm/chartjs-plugin-dragdata
+# Last updates
+Some additions:
+- Unilateral chart option is added and default is updated to unilateral (convertion between unilateral and bilateral is only available in the source/code part).
+
+Note: Since main purpose is to create a filter for real world applications, each point has a conjugate at the opposite part of the chart according to x axis; resultantly, positive and negative x axes are symmetric to each other in the response chart. By updating default to unilateral, I aimed to remove the negative part of the symmetric response chart since it is nonsense to keep it.
+- Points created/moved that are too close to x axis (with a threshold of 0.25 by default) counts to be as one point WITH y=0 VALUE (only in calculation part, user still sees them as two points).
+
+Bug fix:
+- Case of points to be separated from their conjugates when mouse slides from +y to -y or -y to +y without releasing the point is fixed.
+- Indexings of response chart are corrected (still limited with 15 for laplace(s) plane, 3.14(pi) for discrete laplace(z) plane).
 #
 <p align="center">s-plane Magnitude Response</p>
-<p align="center"><img src="https://user-images.githubusercontent.com/77770587/221772345-74053a90-2ba8-42ec-96e4-9ea2e14fd4ef.png" width="900"></p>
+<p align="center"><img src="https://user-images.githubusercontent.com/77770587/222671101-0f0c98a5-7f76-4c83-a0f3-29f4e5fb0365.png" width="900"></p>
 <p align="center">s-plane Phase Response</p>
-<p align="center"><img src="https://user-images.githubusercontent.com/77770587/221772346-c997477c-5d47-4959-990c-88147951b073.png" width="900"></p>
+<p align="center"><img src="https://user-images.githubusercontent.com/77770587/222671105-9293a778-f938-4491-89d0-9b7311439473.png" width="900"></p>
 <p align="center">z-plane Magnitude Response</p>
-<p align="center"><img src="https://user-images.githubusercontent.com/77770587/221772350-c5e18784-b893-4262-a1ef-e72287cc5492.png" width="900"></p>
+<p align="center"><img src="https://user-images.githubusercontent.com/77770587/222671109-1885e35f-947b-43a9-bc88-344f4b3288c6.png" width="900"></p>
 <p align="center">z-plane Phase Response</p>
-<p align="center"><img src="https://user-images.githubusercontent.com/77770587/221772352-b84ddec1-4e11-4500-9e31-76682844f704.png" width="900"></p>
+<p align="center"><img src="https://user-images.githubusercontent.com/77770587/222671113-9dd9403a-60e0-4d90-87be-af5eefb60e9c.png" width="900"></p>
