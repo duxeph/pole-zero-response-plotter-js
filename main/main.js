@@ -1,16 +1,22 @@
-function initializeLabels_s() {
-    let temp = Array.from({length: 30/0.05+1}, (x, i) => i);
+var bilateral = false;
+var ctrl = 0.3;
+var zero_thr = 0.25;
+var clickEvent = "add"
+var plotType = "smag";
+
+function initializeLabels_s(bilateral) {
+    if(bilateral) { var length=30; } else { var length=15; }
+    let temp = Array.from({length: length/0.05+1}, (x, i) => i);
     for(let i=0; i<temp.length; i++) {
-        temp[i] -= 300;
-        temp[i] /= 10;
+        if(length===30) { temp[i] -= 300; temp[i] /= 10; }
+        else { temp[i] /= 20; }
     }
     return temp;
 }
-function initializeLabels_z() {
-    let temp = Array.from({length: 2*Math.PI/0.01+1}, (x, i) => i);
-    for(let i=0; i<temp.length; i++) {
-        temp[i] /= 2;
-    }
+function initializeLabels_z(bilateral) {
+    if(bilateral) { var length = 2*Math.PI; } else { var length = Math.PI; }
+    let temp = Array.from({length: length/0.01+1}, (x, i) => i);
+    for(let i=0; i<temp.length; i++) { temp[i] /= 100; }
     return temp;
 }
 function compare(p1, p2) {
@@ -22,69 +28,135 @@ function complex_distance_s(x, y) {
 function complex_distance_z(x, y) {
     return Math.pow(Math.pow(y.y-x.y, 2)+Math.pow(y.x-x.x, 2), 1/2);
 }
-function magnitude_response_s(chart) {
+function magnitude_response_s(chart, bilateral) {
     // zeros = chart.data.datasets[0].data
     // poles = chart.data.datasets[1].data
     temp = [];
-    for(let i=-15.0; i<=15.0; i+=0.05) {
+    if(bilateral) { var startLimit = -15.; } else { var startLimit = 0; }
+    for(let i=startLimit; i<=15.0; i+=0.05) {
         let a = 1.0;
+        let pass = false;
         chart.data.datasets[0].data.forEach((zero) => {
-            a *= complex_distance_s(zero, i);
-        })
+            if(pass) { pass = false; } else {
+                if(Math.abs(zero.y)<zero_thr) {
+                    a *= complex_distance_s({x:zero.x, y:0}, i);
+                    pass = true;
+                } else {
+                    a *= complex_distance_s(zero, i);
+                }
+            }
+        }); pass = false;
         chart.data.datasets[1].data.forEach((pole) => {
-            let dist = complex_distance_s(pole, i);
-            a /= dist===0?Number.MIN_VALUE:dist;
+            if(pass) { pass = false; } else {
+                if(Math.abs(pole.y)<zero_thr) {
+                    let dist = complex_distance_s({x:pole.x, y:0}, i);
+                    a /= dist===0?Number.MIN_VALUE:dist;
+                    pass = true;
+                } else {
+                    let dist = complex_distance_s(pole, i);
+                    a /= dist===0?Number.MIN_VALUE:dist;
+                }
+            }
         })
         temp.push(a);
     }
     return temp;
 }
-function phase_response_s(chart) {
+function phase_response_s(chart, bilateral) {
     // zeros = chart.data.datasets[0].data
     // poles = chart.data.datasets[1].data
     temp = [];
-    for(let i=-15.0; i<=15.0; i+=0.05) {
+    if(bilateral) { var startLimit = -15.; } else { var startLimit = 0; }
+    for(let i=startLimit; i<=15.0; i+=0.05) {
         let a = 0.0;
+        let pass = false;
         chart.data.datasets[0].data.forEach((zero) => {
-            a += Math.atan(zero.x/(zero.y-i));
-        })
+            if(pass) { pass = false; } else {
+                if(Math.abs(zero.y)<zero_thr) {
+                    a += Math.atan(zero.x/(-i));
+                    pass = true;
+                } else {
+                    a += Math.atan(zero.x/(zero.y-i));
+                }
+            }
+        }); pass = false;
         chart.data.datasets[1].data.forEach((pole) => {
-            a -= Math.atan(pole.x/(pole.y-i));
+            if(pass) { pass = false; } else {
+                if(Math.abs(pole.y)<zero_thr) {
+                    a -= Math.atan(pole.x/(-i));
+                    pass = true;
+                } else {
+                    a -= Math.atan(pole.x/(pole.y-i));
+                }
+            }
         })
         temp.push(a);
     }
     return temp;
 }
-function magnitude_response_z(chart) {
+function magnitude_response_z(chart, bilateral) {
     temp = [];
-    for(let i=0; i<=2*Math.PI; i+=0.01) {
+    if(bilateral) { var endLimit = 2*Math.PI; } else { var endLimit = Math.PI; }
+    for(let i=0; i<=endLimit; i+=0.01) {
         let x = Math.cos(i);
         let y = Math.sin(i);
         let a = 1.0;
+        let pass = false;
         chart.data.datasets[0].data.forEach((zero) => {
-            a *= complex_distance_z(zero, {x, y});
-        })
+            if(pass) { pass = false; } else {
+                if(Math.abs(zero.y)<zero_thr) {
+                    a *= complex_distance_z({x:zero.x, y:0}, {x, y});
+                    pass = true;
+                } else {
+                    a *= complex_distance_z(zero, {x, y});
+                }
+            }
+        }); pass = false;
         chart.data.datasets[1].data.forEach((pole) => {
-            let dist = complex_distance_z(pole, {x, y});
-            a /= dist===0?Number.MIN_VALUE:dist;
+            if(pass) { pass = false; } else {
+                if(Math.abs(pole.y)<zero_thr) {                
+                    let dist = complex_distance_z({x:pole.x, y:0}, {x, y});
+                    a /= dist===0?Number.MIN_VALUE:dist;
+                    pass = true;
+                } else {
+                    let dist = complex_distance_z(pole, {x, y});
+                    a /= dist===0?Number.MIN_VALUE:dist;
+                }
+            }
         })
         temp.push(a);
     }
     return temp;
 }
-function phase_response_z(chart) {
+function phase_response_z(chart, bilateral) {
     // zeros = chart.data.datasets[0].data
     // poles = chart.data.datasets[1].data
     temp = [];
-    for(let i=0; i<=2*Math.PI; i+=0.01) {
+    if(bilateral) { var endLimit = 2*Math.PI; } else { var endLimit = Math.PI; }
+    for(let i=0; i<=endLimit; i+=0.01) {
         let x = Math.cos(i);
         let y = Math.sin(i);
         let a = 0.0;
+        let pass = false;
         chart.data.datasets[0].data.forEach((zero) => {
-            a += Math.atan((zero.x-x)/(zero.y-y));
-        })
+            if(pass) { pass = false; } else {
+                if(Math.abs(zero.y)<zero_thr) {
+                    a += Math.atan((zero.x-x)/(-y));
+                    pass = true;
+                } else {
+                    a += Math.atan((zero.x-x)/(zero.y-y));
+                }
+            }
+        }); pass = false;
         chart.data.datasets[1].data.forEach((pole) => {
-            a -= Math.atan((pole.x-x)/(pole.y-y));
+            if(pass) { pass = false; } else {
+                if(Math.abs(zero.y)<zero_thr) {
+                    a -= Math.atan((pole.x-x)/(-y));
+                    pass = true;
+                } else {
+                    a -= Math.atan((pole.x-x)/(pole.y-y));
+                }
+            }
         })
         temp.push(a);
     }
@@ -125,7 +197,15 @@ var chart = new Chart(document.getElementById('plotChart').getContext('2d'), {
                 onDragStart: function(e, element) {
                 },
                 onDrag: function(e, datasetIndex, index, value) {
-                    if(value.y>0) {
+                    if(index%2===0 && chart.data.datasets[datasetIndex].data[index].y<0) {
+                        chart.data.datasets[datasetIndex].data[index].y = -chart.data.datasets[datasetIndex].data[index].y;
+                        chart.data.datasets[datasetIndex].data[index+1].x = chart.data.datasets[datasetIndex].data[index].x;
+                        chart.data.datasets[datasetIndex].data[index+1].y = -chart.data.datasets[datasetIndex].data[index].y;
+                    } else if(index%2===1 && chart.data.datasets[datasetIndex].data[index].y>0) {
+                        chart.data.datasets[datasetIndex].data[index].y = -chart.data.datasets[datasetIndex].data[index].y;
+                        chart.data.datasets[datasetIndex].data[index-1].x = chart.data.datasets[datasetIndex].data[index].x;
+                        chart.data.datasets[datasetIndex].data[index-1].y = -chart.data.datasets[datasetIndex].data[index].y;
+                    } else if(value.y>0) {
                         chart.data.datasets[datasetIndex].data[index+1].x = chart.data.datasets[datasetIndex].data[index].x;
                         chart.data.datasets[datasetIndex].data[index+1].y = -chart.data.datasets[datasetIndex].data[index].y;
                     } else {
@@ -160,7 +240,7 @@ var chart = new Chart(document.getElementById('plotChart').getContext('2d'), {
 var chart_2 = new Chart(document.getElementById('resultChart').getContext('2d'), {
     type: "line",
     data: {
-        labels: initializeLabels_s(),
+        labels: initializeLabels_s(bilateral),
         datasets: [{
             label: "Magnitude Response (s-plane)", pointStyle: false,
             data: [] // Array.from({length: 30}, () => Math.random())
@@ -186,15 +266,15 @@ var chart_2 = new Chart(document.getElementById('resultChart').getContext('2d'),
 });
 function update() {
     if (plotType==="smag") {
-        chart_2.data.datasets[0].data = magnitude_response_s(chart);
+        chart_2.data.datasets[0].data = magnitude_response_s(chart, bilateral);
     } else if (plotType==="zmag") {
-        chart_2.data.datasets[0].data = magnitude_response_z(chart);
+        chart_2.data.datasets[0].data = magnitude_response_z(chart, bilateral);
     } else if (plotType==="sphs") {
-        chart_2.data.datasets[0].data = phase_response_s(chart);
+        chart_2.data.datasets[0].data = phase_response_s(chart, bilateral);
     } else if (plotType==="zphs") {
-        chart_2.data.datasets[0].data = phase_response_z(chart);
+        chart_2.data.datasets[0].data = phase_response_z(chart, bilateral);
     }
-    console.log("updated according to "+plotType);
+    console.log("Chart is updated according to "+plotType+".");
     chart_2.update();
 }
 
@@ -207,7 +287,7 @@ function clickProcess(e) {
     var _case = false;
 
     if (clickEvent==="add") {
-        if (e.type=="contextmenu") {
+        if (e.type==="contextmenu") {
             chart.data.datasets[0].data.forEach((e) => {
                 _case = _case===false?compare(e, {x, y}):true;
             });
@@ -216,7 +296,7 @@ function clickProcess(e) {
                 chart.data.datasets[0].data.push({x: x, y: y})
                 chart.data.datasets[0].data.push({x: x, y: -y})
             }
-        } else if (e.type=="click") {
+        } else if (e.type==="click") {
             chart.data.datasets[1].data.forEach((e) => {
                 _case = _case===false?compare(e, {x, y}):true;
             });
@@ -227,7 +307,7 @@ function clickProcess(e) {
             }
         }
     } else if (clickEvent==="delete") {
-        if (e.type=="click") {
+        if (e.type==="click") {
             var found = false;
             for(let i=0; i<chart.data.datasets[1].data.length; i++) {
                 temp = chart.data.datasets[1].data[i];
@@ -278,7 +358,7 @@ updateButton.addEventListener("click", function() {
         if (plane==="s-plane") {
             plotType = "smag";
             chart_2.data.datasets[0].label = "Magnitude Response (s-plane)";
-        } else if (plane=="z-plane") {
+        } else if (plane==="z-plane") {
             plotType = "zmag";
             chart_2.data.datasets[0].label = "Magnitude Response (z-plane)";
         }
@@ -293,11 +373,11 @@ updateButton.addEventListener("click", function() {
     }
     if (plane==="s-plane") {
         chart.data.datasets[2].data = [{x: 10, y: 10}, {x: -10, y: -10}]
-        chart_2.data.labels = initializeLabels_s();
+        chart_2.data.labels = initializeLabels_s(bilateral);
         ctrl = 0.3;
     } else if (plane==="z-plane") {
         chart.data.datasets[2].data = [{x: 3, y: 3}, {x: -3, y: -3}]
-        chart_2.data.labels = initializeLabels_z();
+        chart_2.data.labels = initializeLabels_z(bilateral);
         ctrl = 0.1;
     }
     chart.update();
@@ -316,7 +396,4 @@ delClicks.addEventListener("change", function() {
     }
 })
 
-var ctrl = 0.3;
-var clickEvent = "add"
-var plotType = "smag";
 update();
