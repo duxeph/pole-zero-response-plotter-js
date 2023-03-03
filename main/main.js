@@ -1,11 +1,11 @@
-var bilateral = false;
+var draw_negative = false;
 var ctrl = 0.3;
 var zero_thr = 0.25;
 var clickEvent = "add"
 var plotType = "smag";
 
-function initializeLabels_s(bilateral) {
-    if(bilateral) { var length=30; } else { var length=15; }
+function initializeLabels_s(draw_negative) {
+    if(draw_negative) { var length=30; } else { var length=15; }
     let temp = Array.from({length: length/0.05+1}, (x, i) => i);
     for(let i=0; i<temp.length; i++) {
         if(length===30) { temp[i] -= 300; temp[i] /= 10; }
@@ -13,8 +13,8 @@ function initializeLabels_s(bilateral) {
     }
     return temp;
 }
-function initializeLabels_z(bilateral) {
-    if(bilateral) { var length = 2*Math.PI; } else { var length = Math.PI; }
+function initializeLabels_z(draw_negative) {
+    if(draw_negative) { var length = 2*Math.PI; } else { var length = Math.PI; }
     let temp = Array.from({length: length/0.01+1}, (x, i) => i);
     for(let i=0; i<temp.length; i++) { temp[i] /= 100; }
     return temp;
@@ -28,11 +28,11 @@ function complex_distance_s(x, y) {
 function complex_distance_z(x, y) {
     return Math.pow(Math.pow(y.y-x.y, 2)+Math.pow(y.x-x.x, 2), 1/2);
 }
-function magnitude_response_s(chart, bilateral) {
+function magnitude_response_s(chart, draw_negative) {
     // zeros = chart.data.datasets[0].data
     // poles = chart.data.datasets[1].data
     temp = [];
-    if(bilateral) { var startLimit = -15.; } else { var startLimit = 0; }
+    if(draw_negative) { var startLimit = -15.; } else { var startLimit = 0; }
     for(let i=startLimit; i<=15.0; i+=0.05) {
         let a = 1.0;
         let pass = false;
@@ -62,11 +62,11 @@ function magnitude_response_s(chart, bilateral) {
     }
     return temp;
 }
-function phase_response_s(chart, bilateral) {
+function phase_response_s(chart, draw_negative) {
     // zeros = chart.data.datasets[0].data
     // poles = chart.data.datasets[1].data
     temp = [];
-    if(bilateral) { var startLimit = -15.; } else { var startLimit = 0; }
+    if(draw_negative) { var startLimit = -15.; } else { var startLimit = 0; }
     for(let i=startLimit; i<=15.0; i+=0.05) {
         let a = 0.0;
         let pass = false;
@@ -94,9 +94,9 @@ function phase_response_s(chart, bilateral) {
     }
     return temp;
 }
-function magnitude_response_z(chart, bilateral) {
+function magnitude_response_z(chart, draw_negative) {
     temp = [];
-    if(bilateral) { var endLimit = 2*Math.PI; } else { var endLimit = Math.PI; }
+    if(draw_negative) { var endLimit = 2*Math.PI; } else { var endLimit = Math.PI; }
     for(let i=0; i<=endLimit; i+=0.01) {
         let x = Math.cos(i);
         let y = Math.sin(i);
@@ -128,11 +128,11 @@ function magnitude_response_z(chart, bilateral) {
     }
     return temp;
 }
-function phase_response_z(chart, bilateral) {
+function phase_response_z(chart, draw_negative) {
     // zeros = chart.data.datasets[0].data
     // poles = chart.data.datasets[1].data
     temp = [];
-    if(bilateral) { var endLimit = 2*Math.PI; } else { var endLimit = Math.PI; }
+    if(draw_negative) { var endLimit = 2*Math.PI; } else { var endLimit = Math.PI; }
     for(let i=0; i<=endLimit; i+=0.01) {
         let x = Math.cos(i);
         let y = Math.sin(i);
@@ -240,7 +240,7 @@ var chart = new Chart(document.getElementById('plotChart').getContext('2d'), {
 var chart_2 = new Chart(document.getElementById('resultChart').getContext('2d'), {
     type: "line",
     data: {
-        labels: initializeLabels_s(bilateral),
+        labels: initializeLabels_s(draw_negative),
         datasets: [{
             label: "Magnitude Response (s-plane)", pointStyle: false,
             data: [] // Array.from({length: 30}, () => Math.random())
@@ -266,13 +266,13 @@ var chart_2 = new Chart(document.getElementById('resultChart').getContext('2d'),
 });
 function update() {
     if (plotType==="smag") {
-        chart_2.data.datasets[0].data = magnitude_response_s(chart, bilateral);
+        chart_2.data.datasets[0].data = magnitude_response_s(chart, draw_negative);
     } else if (plotType==="zmag") {
-        chart_2.data.datasets[0].data = magnitude_response_z(chart, bilateral);
+        chart_2.data.datasets[0].data = magnitude_response_z(chart, draw_negative);
     } else if (plotType==="sphs") {
-        chart_2.data.datasets[0].data = phase_response_s(chart, bilateral);
+        chart_2.data.datasets[0].data = phase_response_s(chart, draw_negative);
     } else if (plotType==="zphs") {
-        chart_2.data.datasets[0].data = phase_response_z(chart, bilateral);
+        chart_2.data.datasets[0].data = phase_response_z(chart, draw_negative);
     }
     console.log("Chart is updated according to "+plotType+".");
     chart_2.update();
@@ -373,11 +373,11 @@ updateButton.addEventListener("click", function() {
     }
     if (plane==="s-plane") {
         chart.data.datasets[2].data = [{x: 10, y: 10}, {x: -10, y: -10}]
-        chart_2.data.labels = initializeLabels_s(bilateral);
+        chart_2.data.labels = initializeLabels_s(draw_negative);
         ctrl = 0.3;
     } else if (plane==="z-plane") {
         chart.data.datasets[2].data = [{x: 3, y: 3}, {x: -3, y: -3}]
-        chart_2.data.labels = initializeLabels_z(bilateral);
+        chart_2.data.labels = initializeLabels_z(draw_negative);
         ctrl = 0.1;
     }
     chart.update();
